@@ -31,16 +31,16 @@ exit
 fi
 
 cf login --a $API --u $CF_USERNAME --p $CF_PASSWORD --o $ORG -s $SPACE
+
+# Remove venerable applications
 cf apps |
 while IFS= read -r LINE
   do
     PATTERN='(\w*-)+venerable'
     suffix='-venerable'
     if [[ "$LINE" =~ $PATTERN ]]; then
-      # echo `expr match "$LINE" $PATTERN`
       b=${LINE%$suffix*}
       app=${b%$suffix*}
-      echo $app$suffix
       cf delete -f $app$suffix
     fi
   done
