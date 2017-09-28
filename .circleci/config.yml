@@ -1,0 +1,153 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+      - image: circleci/node:6.10
+      - image: circleci/postgres:9.6.5-alpine-ram
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "./server/yarn.lock" }}
+      - restore_cache:
+          key: dependency-cache-{{ checksum "./frontend/package.json" }}
+      - run: ./run-builds.sh
+      - save_cache:
+          key: dependency-cache-{{ checksum "./server/package.json" }}
+          paths:
+            - ./server/.cache/yarn
+      - save_cache:
+          key: dependency-cache-{{ checksum "./frontend/package.json" }}
+          paths:
+            - ./frontend/.cache/yarn
+      - run: cd frontend; yarn dist;
+      - run: cd server; yarn migrate
+      # - persist_to_workspace:
+      #     root: ~/frontend
+      #     paths:
+      #       - dist/*
+  test_server:
+    docker:
+      - image: circleci/node:6.10
+      - image: circleci/postgres:9.6.2
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "./server/yarn.lock" }}
+      - run: cd server; yarn
+      - run:
+          name: Test Server
+          command: cd server; yarn coverage
+      - run:
+          name: Generate Server coverage
+          command: cd server; yarn report-coverage
+      - store_artifacts:
+          path: ./server/coverage
+  test_frontend:
+    docker:
+      - image: circleci/node:6.10
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "./frontend/package.json" }}
+      - run: cd frontend; yarn
+      - run: cd frontend; yarn run test:ci
+  lint:
+    docker:
+      - image: circleci/node:6.10
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "./frontend/package.json" }}
+      - restore_cache:
+          key: dependency-cache-{{ checksum "./server/yarn.lock" }}
+      - run:
+          name: lint frontend
+          command: cd frontend; yarn run lint
+      - run:
+          name: lint server
+          command: cd server; yarn run lint
+  run_e2e:
+    docker:
+      - image: circleci/node:6
+      - image: circleci/postgres:9.6.2
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /frontend/dist
+      - run: curl -L -o google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+      - run: dpkg -i google-chrome.deb
+      - run: sed -i 's|HERE/chrome\"|HERE/chrome\" --disable-setuid-sandbox|g' /opt/google/chrome/google-chrome
+      - run: rm google-chrome.deb
+      - run: cd frontend; npm install -g protractor
+      - run: ./run-e2e.sh;
+  build_docs:
+    docker:
+      - image: circleci/node:6
+      - image: circleci/postgres:9.6.2
+    steps:
+      - checkout
+      - run: yarn add typedoc
+      - run: cd frontend; yarn run docs;
+  pa11y:
+    docker:
+      - image: circleci/node:6
+    steps:
+      - checkout
+      - run: cd frontend; yarn
+      - ./pa11y.sh
+  deployment:
+    docker:
+      - image: circleci/node:6
+      - image: circleci/postgres:9.6.2
+    steps:
+      - checkout
+      - run: cd frontend; yarn run update-version;
+      - run: cd frontend; yarn dist;
+      - deploy:
+          - name: Deploy to 18F master
+          - command: |
+              if [ "${CIRCLE_BRANCH}" == "master"] && [ ${CIRCLE_PROJECT_USERNAME} === "18F" ]; then
+                ./cg-deploy/deploy.sh public-production
+              else
+                echo "Not master branch so not deploying to prod"
+              fi
+      - deploy:
+          - name: Deploy to 18F master
+          - command: |
+              if [ "${CIRCLE_BRANCH}" == "sprint-12-development" ] && [ ${CIRCLE_PROJECT_USERNAME} === "flexion" ]; then
+                ./cg-deploy/deploy.sh public-staging
+              else
+                echo "Skip staging deployment."
+              fi
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - test_server:
+          requires:
+            - build
+      - test_frontend:
+          requires:
+            - build
+      - lint:
+          requires:
+            - build
+      - run_e2e:
+          requires:
+            - build
+      - pa11y:
+          requires:
+            - build
+      - build_docs:
+          requires:
+            - build
+      - deployment:
+          requires:
+            - test_server
+            - test_frontend
+            - pa11y
+            - lint
+            - run_e2e
+            - build_docs

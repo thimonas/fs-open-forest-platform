@@ -15,7 +15,7 @@ const dbConfig = {
   logging: console.log
 };
 
-if (dbParams.hostname !== 'localhost' && dbParams.hostname !== 'fs-intake-postgres') {
+if (dbParams.hostname !== 'localhost' && dbParams.hostname !== 'fs-intake-postgres' & dbParams.hostname !=="127.0.0.1") {
   dbConfig.ssl = true;
   dbConfig.dialectOptions = {
     ssl: {

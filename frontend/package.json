@@ -14,7 +14,7 @@
     "start": "ng serve",
     "test:ci": "ng test --single-run=true --watch=false --progress=false --code-coverage",
     "test": "ng test",
-    "typedoc": "typedoc",
+    "typedoc": "./node_modules/bin/typedoc",
     "update-version": "npm version patch && node ./replace.build.js"
   },
   "private": true,
