@@ -32,6 +32,7 @@ jobs:
       - image: circleci/postgres:9.6.2
     steps:
       - checkout
+      - run: cd server; yarn migrate
       - restore_cache:
           key: dependency-cache-{{ checksum "./server/yarn.lock" }}
       - run: cd server; yarn
@@ -73,8 +74,6 @@ jobs:
       - image: circleci/postgres:9.6.2
     steps:
       - checkout
-      - attach_workspace:
-          at: /frontend/dist
       - run: curl -L -o google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
       - run: dpkg -i google-chrome.deb
       - run: sed -i 's|HERE/chrome\"|HERE/chrome\" --disable-setuid-sandbox|g' /opt/google/chrome/google-chrome
