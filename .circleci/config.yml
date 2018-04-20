@@ -93,7 +93,6 @@ jobs:
       - run:
           name: build docker compose images
           command: cd docker; ../.circleci/build-docker-images.sh
-      - run:
       - run: #STABLE
           name: Install Chromedriver latest version
           command: |
