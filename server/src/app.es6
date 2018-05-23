@@ -22,7 +22,7 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./docs/swagger.json');
 const logger = require('winston');
 logger.remove(logger.transports.Console);
-logger.add(logger.transports.Console, { colorize: true });
+logger.add(logger.transports.Console, {json:true, colorize: true });
 const expressWinston = require('express-winston');
 
 // Create the express application.
@@ -46,7 +46,7 @@ app.use(bodyParser.xml());
 if (logger.levels[logger.level] >= 2) {
   app.use(expressWinston.logger({
     transports: [
-      new logger.transports.Console({ colorize: true })
+      new logger.transports.Console({ json:true, colorize: true })
     ],
     requestWhitelist: expressWinston.requestWhitelist.concat('body')
   }));
