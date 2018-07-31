@@ -16,12 +16,13 @@ else
       then
          echo 'No specs provided. Running all specs. To limit the specs to be run, include a space seperated list of specs to run.'
       else
+        ARGUMENTS=$ARGUMENTS"--specs "
         for i in "$@"
         do
-          ARGUMENTS=$ARGUMENTS"--specs=../${i} "
+          ARGUMENTS=$ARGUMENTS"${i},"
         done
       fi
-      ARGUMENTS=$ARGUMENTS"--protractor-config ./development-configurations/protractor.conf.js"
+      # ARGUMENTS=$ARGUMENTS"--protractor-config ./development-configurations/protractor.conf.js"
       ;;
     -u)
       if [ $# -ge 1 ]
@@ -60,5 +61,3 @@ else
   kill -int $serverid
   exit $e2ereturncode
 fi
-
-
