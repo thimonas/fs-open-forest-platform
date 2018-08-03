@@ -131,15 +131,15 @@ jobs:
           name: Copy shared assets from frontend into server
           command: cd server; ./copy-frontend-assets.sh
       - persist_to_workspace:
-          root: ~/
+          root: .
           paths: 
-            - project
+            - .
   run-auth-e2e:
     <<: *docker_image_browser
     parallelism: 4
     steps:
       - attach_workspace:
-          at: project
+          at: .
       - run: *populate_server
       - run:
           name: Run authenicated e2e tests
