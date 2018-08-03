@@ -134,6 +134,7 @@ jobs:
           root: .
           paths: 
             - .
+            - /usr/bin/google-chrome
   run-auth-e2e:
     <<: *docker_image_browser
     parallelism: 4
@@ -144,6 +145,7 @@ jobs:
       - run:
           name: Run authenicated e2e tests
           command: |
+            export PATH=$PATH:google-chrome
             export TESTFILES=$(cd frontend;circleci tests glob "./e2e/authenticated/**/*.e2e-spec.ts" | circleci tests split)
             echo 'This container is running the following tests:'
             echo ${TESTFILES}
