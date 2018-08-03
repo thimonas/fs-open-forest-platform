@@ -158,7 +158,7 @@ jobs:
     <<: *docker_image_browser
     steps:
       - attach_workspace:
-          at: project
+          at: .
       - run: *populate_server
       - run:
           name: Run unauthenticated e2e tests
