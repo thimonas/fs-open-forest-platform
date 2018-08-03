@@ -386,7 +386,13 @@ workflows:
   build-deploy:
     jobs:
       - run-all-other-tests
-      - run-e2e
+      - build-e2e
+      - run-unauth-e2e:
+          requires:
+            - build-e2e
+      - run-auth-e2e:
+          requires:
+            - build-e2e
       - build-docker:
           filters:
             branches:
@@ -398,7 +404,8 @@ workflows:
       - staging-deploy:
           requires:
             - run-all-other-tests
-            - run-e2e
+            - run-auth-e2e
+            - run-unauth-e2e
             - run-pa11y
             - build-docker
           filters:
@@ -407,7 +414,8 @@ workflows:
       - prod-deploy:
           requires:
             - run-all-other-tests
-            - run-e2e
+            - run-auth-e2e
+            - run-unauth-e2e
             - run-pa11y
           filters:
             branches:
