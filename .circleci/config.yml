@@ -134,7 +134,7 @@ jobs:
           root: .
           paths: 
             - .
-            - /usr/bin/google-chrome
+            - ../../usr/bin/google-chrome
   run-auth-e2e:
     <<: *docker_image_browser
     parallelism: 4
@@ -165,6 +165,7 @@ jobs:
       - run:
           name: Run unauthenticated e2e tests
           command: |
+            export PATH=$PATH:google-chrome
             .circleci/run-e2e.sh -u
       - store_artifacts:
           path: frontend/e2e-test-results
