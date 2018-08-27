@@ -7,7 +7,7 @@
 1. In a console terminal navigate to the directory the repository was cloned to. Now `cd` to the `docker` directory.
 
    ```
-   $ cd fs-permit-platform
+   $ cd fs-open-forest-platform
    $ cd docker
    ```
 
@@ -54,7 +54,7 @@ In addition to running the whole application locally, pa11y tests can also be ru
 1. In a console terminal navigate to the directory the repository was cloned to. Now `cd` to the `docker` directory.
 
    ```
-   $ cd fs-permit-platform
+   $ cd fs-open-forest-platform
    $ cd docker
    ```
 
