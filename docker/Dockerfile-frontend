@@ -8,22 +8,18 @@ RUN sudo apt-get update \
     && sudo sed -i 's|HERE/chrome"|HERE/chrome" --no-sandbox|g' /opt/google/chrome/google-chrome \
     && sudo rm google-chrome.deb
 
-RUN google-chrome --version 
+RUN google-chrome --version
 
 # set working directory
 WORKDIR /usr/src/app
 
-# install and cache app dependencies
-COPY ./frontend/package.json /usr/src/app/package.json
+# install dependencies
 USER root
+COPY ./frontend/package*.json /usr/src/app/
 RUN npm install
-RUN npm install -g @angular/cli@6.0.8
 
-# add `/usr/src/app/node_modules/.bin` to $PATH
+# add node_modules to $PATH
 ENV PATH /usr/src/app/node_modules/.bin:$PATH
-
-# add app
-COPY ./frontend /usr/src/app
 
 # start app
 CMD ng serve --host 0.0.0.0

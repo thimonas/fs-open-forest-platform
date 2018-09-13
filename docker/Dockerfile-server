@@ -11,16 +11,14 @@ RUN dpkg -i ttf-mscorefonts-installer_3.6_all.deb
 RUN fc-cache
 
 # create a top level node directory and copy the server package.json
-
 WORKDIR /usr/src/app
-COPY ./server/package*.json ./
-COPY ./server .
+COPY ./server/package*.json /usr/src/app/
 
 # install server dependencies
 RUN npm install
 
-# set the workdir as the /app directory
-# this dir is mapped to the server directory in the cloned repo
+# Add node_modules to PATH
+ENV PATH /usr/src/app/node_modules/.bin:$PATH
 
 # Make port 8080 available to the world outside this container
 EXPOSE 8080
@@ -40,5 +38,4 @@ ENV DATABASE_URL=postgresql://postgres:postgres@fs-intake-postgres:5432/postgres
 ENV SNYK_TOKEN=$SNYK_TOKEN
 
 # startup node with app.es6 when the container launches
-#CMD ["/node/node_modules/.bin/nodemon", "--harmony_default_parameters", "app.es6"]
 CMD ["./server-setup.sh"]
