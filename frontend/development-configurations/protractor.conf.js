@@ -11,6 +11,8 @@ var screenshotReporter = new HtmlScreenshotReporter({
   filename: 'index.html'
 });
 
+const testFrontendUrl = process.env.TEST_FRONTEND_URL || 'http://localhost:4200/';
+
 exports.config = {
   allScriptsTimeout: 11000,
   specs: ['../e2e/authenticated/**/*.e2e-spec.ts'],
@@ -23,7 +25,7 @@ exports.config = {
       : {}
   },
   directConnect: true,
-  baseUrl: 'http://localhost:4200/',
+  baseUrl: testFrontendUrl,
   framework: 'jasmine',
   jasmineNodeOpts: {
     showColors: true,

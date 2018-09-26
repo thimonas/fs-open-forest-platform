@@ -163,6 +163,11 @@
           "options": {
             "protractorConfig": "./protractor.conf.js",
             "devServerTarget": "frontend:serve"
+          },
+          "configurations": {
+            "docker": {
+              "devServerTarget": "frontend:serve:docker"
+            }
           }
         },
         "lint": {

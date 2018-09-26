@@ -43,7 +43,15 @@
 
 1. If either of the `package.json` files are modified, at this time simply Ctrl+C in the terminal you ran `docker-compose` in to stop the running containers and then re-run the `docker-compose` command to rebuild the containers.
 
-#### Pa11y in Docker
+## Tests
+
+### e2e
+
+Run the e2e tests in a docker container.
+
+    $ docker-compose run --rm fs-intake-frontend yarn run e2e -- --configuration=docker
+
+### Pa11y
 
 In addition to running the whole application locally, pa11y tests can also be run in Docker by following these steps:
 
@@ -80,6 +88,6 @@ In addition to running the whole application locally, pa11y tests can also be ru
 
 1. In a console terminal run `pa11y-ci` and the tests will run, displaying any pa11y errors found.
 
-#### Docker Troubleshooting
+## Troubleshooting
 
 * [No such file or directory for /var/lib/docker/overlay2 · Issue #1396 · docker/for-mac](https://github.com/docker/for-mac/issues/1396#issuecomment-313457823)
