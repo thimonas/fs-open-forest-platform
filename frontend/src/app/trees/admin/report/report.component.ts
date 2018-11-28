@@ -119,7 +119,8 @@ export class ReportComponent implements OnInit, AfterViewInit {
    * @returns forest by date
    */
   getForestDate(dateField) {
-    return moment.tz(this.form.get(dateField).value, this.forest.timezone).format('MM/DD/YYYY');
+    return moment.tz(this.form.get(dateField).value, "").format('MM/DD/YYYY');
+    // return moment.tz(this.form.get(dateField).value, this.forest.timezone).format('MM/DD/YYYY');
   }
 
   /**
@@ -146,13 +147,20 @@ export class ReportComponent implements OnInit, AfterViewInit {
    * get permit by date and set to this.result
    */
   private getPermitsByDate() {
+
+    // console.log(this.form.get('dateTimeRange.startDateTime').value);
+    // console.log(moment.tz(this.form.get('dateTimeRange.startDateTime').value, this.forest.timezone).format('YYYY-MM-DD'));
+    // console.log(this.forest)
     if (this.form.valid && !this.dateStatus.hasErrors && this.forest) {
       this.setReportParameters();
       this.service.getAllByDateRange(
           this.forest.id,
-          moment.tz(this.form.get('dateTimeRange.startDateTime').value, this.forest.timezone).format('YYYY-MM-DD'),
-          moment.tz(this.form.get('dateTimeRange.endDateTime').value, this.forest.timezone).format('YYYY-MM-DD')
-        )
+          moment.tz(this.form.get('dateTimeRange.startDateTime').value, "").format('YYYY-MM-DD'),
+          moment.tz(this.form.get('dateTimeRange.endDateTime').value, "").format('YYYY-MM-DD')
+      //    moment.tz(this.form.get('dateTimeRange.startDateTime').value, this.forest.timezone).format('YYYY-MM-DD'),
+      //    moment.tz(this.form.get('dateTimeRange.endDateTime').value, this.forest.timezone).format('YYYY-MM-DD')
+
+          )
         .subscribe(results => {
             this.result = {
               numberOfPermits: results.numberOfPermits,
@@ -186,6 +194,7 @@ export class ReportComponent implements OnInit, AfterViewInit {
    * Get permit by permit number and set to this.result
    */
   getPermitByNumber() {
+
     this.afs.touchAllFields(this.permitNumberSearchForm);
     this.result = null;
     if (this.permitNumberSearchForm.valid) {

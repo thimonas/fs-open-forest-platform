@@ -229,8 +229,10 @@ export class DateTimeRangeComponent implements OnInit {
   private processDateStatus(startDateTime, endDateTime) {
     const outputFormat = 'YYYY-MM-DDTHH:mm:ss';
     this.parentForm.patchValue({ dateTimeRange: { startDateTime: startDateTime.format(outputFormat) + 'Z' } });
+    
     this.parentForm.patchValue({ dateTimeRange: { endDateTime: endDateTime.format(outputFormat) + 'Z' } });
-
+    console.log('startDateTime'+startDateTime.format(outputFormat) + 'Z');
+    console.log('endDateTime'+endDateTime.format(outputFormat) + 'Z');
     this.setValidity(startDateTime, endDateTime);
 
     this.dateStatus.dateTimeSpan = startDateTime.diff(endDateTime, 'days') + 1;
@@ -247,6 +249,8 @@ export class DateTimeRangeComponent implements OnInit {
    * Validate startDateTime against endDateTime
    */
   setValidity(startDateTime, endDateTime) {
+    // console.log('startDateTime'+startDateTime);
+   // console.log('endDateTime'+endDateTime);
     this.resetDateTimeRangeValidation();
     const today = moment();
     this.dateStatus.startDateTimeValid = this.setError(startDateTime.isValid(), 'startDateTime', {
