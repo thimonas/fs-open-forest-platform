@@ -7,7 +7,7 @@ services:
     networks:
       - fs-intake
     environment:
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: Gigantes12345678
   fs-intake-server:
     build:
       context: ..
@@ -67,3 +67,4 @@ services:
       user: root
 networks:
   fs-intake:
+

@@ -119,7 +119,9 @@ export class ReportComponent implements OnInit, AfterViewInit {
    * @returns forest by date
    */
   getForestDate(dateField) {
-    return moment.tz(this.form.get(dateField).value, "").format('MM/DD/YYYY');
+   // return moment.tz(this.form.get(dateField).value, "").format('MM/DD/YYYY');
+   return moment.utc(this.form.get(dateField).value).format('MM/DD/YYYY')
+   // return moment.tz(this.form.get(dateField).value, this.forest.timezone).format('MM/DD/YYYY');
   }
 
   /**
@@ -148,10 +150,18 @@ export class ReportComponent implements OnInit, AfterViewInit {
   private getPermitsByDate() {
     if (this.form.valid && !this.dateStatus.hasErrors && this.forest) {
       this.setReportParameters();
+      console.log('Original moment after setReportParameters startDateTime'+ moment.tz(this.form.get('dateTimeRange.startDateTime').value, this.forest.timezone).format('YYYY-MM-DD'));
+      console.log('Original moment after setReportParameters endDateTime'+ moment.tz(this.form.get('dateTimeRange.endDateTime').value, this.forest.timezone).format('YYYY-MM-DD'));
       this.service.getAllByDateRange(
           this.forest.id,
-          moment.tz(this.form.get('dateTimeRange.startDateTime').value, "").format('YYYY-MM-DD'),
-          moment.tz(this.form.get('dateTimeRange.endDateTime').value, "").format('YYYY-MM-DD')
+        moment.utc(this.form.get('dateTimeRange.startDateTime').value).format('YYYY-MM-DD'),
+        moment.utc(this.form.get('dateTimeRange.endDateTime').value).format('YYYY-MM-DD')
+     //   moment.tz(this.form.get('dateTimeRange.startDateTime').value, "").format('YYYY-MM-DD'),
+   //    moment.tz(this.form.get('dateTimeRange.endDateTime').value, "").format('YYYY-MM-DD')
+
+           //moment.tz(this.form.get('dateTimeRange.startDateTime').value, this.forest.timezone).format('YYYY-MM-DD'),
+           //moment.tz(this.form.get('dateTimeRange.endDateTime').value, this.forest.timezone).format('YYYY-MM-DD')
+
         )
         .subscribe(results => {
             this.result = {

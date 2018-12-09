@@ -28,7 +28,7 @@ const getPermitResult = permit => {
   
   if (permit.christmasTreesForest && permit.christmasTreesForest.timezone) {
     eachPermit.issueDate = moment.tz(permit.updatedAt, permit.christmasTreesForest.timezone).format('MM/DD/YYYY');
-
+console.log('........eachPermit.issueDate'+eachPermit.issueDate);
     eachPermit.expireDate = moment
       .tz(permit.permitExpireDate, permit.christmasTreesForest.timezone)
       .format('MM/DD/YYYY');
@@ -56,6 +56,7 @@ const returnPermitsReport = (results, res) => {
       sumOfTrees += permit.quantity;
       sumOfCost += parseFloat(permit.totalCost);
       permits.push(getPermitResult(permit));
+ 
     });
 
     res.status(200).json({
@@ -83,8 +84,12 @@ christmasTreeAdmin.getPermitSummaryReport = (req, res) => {
       }
     })
     .then(forest => {
-      const nextDay = moment.tz(req.params.endDate, forest.timezone).add(1, 'days');
-      const startDate = moment.tz(req.params.startDate, forest.timezone).format(util.datetimeFormat);
+      console.log('forest.timezone:::'+forest.timezone);
+   const nextDay = moment.tz(req.params.endDate, forest.timezone).add(1, 'days');
+   const startDate = moment.tz(req.params.startDate, forest.timezone).format(util.datetimeFormat);
+   console.log('startDate:::'+moment.tz(req.params.startDate, forest.timezone).format(util.datetimeFormat));
+      console.log('nextDay:::'+ moment.tz(req.params.endDate, forest.timezone).add(1, 'days').format(util.datetimeFormat));
+
       treesDb.christmasTreesPermits
         .findAll({
           attributes: [

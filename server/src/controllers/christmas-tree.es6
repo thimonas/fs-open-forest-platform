@@ -30,6 +30,8 @@ const christmasTree = {};
  * @return {Object} - formatted permit object
  */
 const translatePermitFromClientToDatabase = input => {
+
+
   return {
     permitId: uuid(),
     forestId: input.forestId,
@@ -237,10 +239,15 @@ christmasTree.create = (req, res) => {
         logger.error('Permit attempted to be created outside of season date for ${req.body.forestId}');
         return res.status(404).send(); // season is closed or not yet started
       } else {
+    
         req.body.expDate = forest.endDate;
         treesDb.christmasTreesPermits
           .create(translatePermitFromClientToDatabase(req.body))
           .then(permit => {
+            console.log('RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRreq.body');
+            console.log(req.body);
+            console.log('PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPpermit');
+            console.log(permit);
             util.logControllerAction(req, 'christmasTree.create', permit);
             const xmlData = paygov.getXmlForToken(forest.forestAbbr, forest.possFinancialId, permit);
             postPayGov(xmlData)

@@ -86,8 +86,9 @@
 
         <p>If your forest is not listed, please <a href="{{changeRequestFormUrl}}">request access</a>.</p>
 
-
+        <pre>{{form.value|json}}</pre>
         <div>
+           
           <app-date-time-range
            [parentForm]="form"
            dateOnly="true"
